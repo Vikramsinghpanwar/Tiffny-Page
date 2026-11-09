@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+ * Tiffny brand tokens. Forest #1F4D3A, cream #FAF7F0 and mint #9FDCC0 come from
+ * the shared logo (tiffin-next components/brand/TiffnyLogo.tsx and the Android
+ * launcher icon); the rest are supporting tints derived from them.
+ * ------------------------------------------------------------------------- */
+@theme {
+  --color-forest-50: #eef5f1;
+  --color-forest-100: #d6e8de;
+  --color-forest-200: #b0d2c0;
+  --color-forest-300: #7fb39a;
+  --color-forest-400: #4f8d71;
+  --color-forest-500: #2f6c52;
+  --color-forest: #1f4d3a;
+  --color-forest-700: #183d2e;
+  --color-forest-800: #122f24;
+  --color-forest-900: #0c2119;
+
+  --color-mint: #9fdcc0;
+  --color-mint-soft: #d4f0e3;
+  --color-mint-pale: #ebf8f1;
+
+  --color-cream: #faf7f0;
+  --color-warm-white: #fffdf8;
+  --color-beige: #f1eadb;
+  --color-beige-deep: #e4d8c0;
+  --color-saffron: #e8a33d;
+  --color-chili: #c8553d;
+
+  --color-ink: #1d2420;
+  --color-ink-soft: #4a5550;
+  --color-ink-muted: #6b746f;
+  --color-line: #e7e0d0;
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --shadow-soft: 0 1px 2px rgb(31 77 58 / 0.05), 0 8px 24px -12px rgb(31 77 58 / 0.18);
+  --shadow-card: 0 1px 2px rgb(31 77 58 / 0.04), 0 18px 40px -22px rgb(31 77 58 / 0.28);
+  --shadow-float: 0 2px 6px rgb(18 47 36 / 0.06), 0 24px 48px -20px rgb(18 47 36 / 0.35);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-spin-slow: spin 60s linear infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Keeps anchored sections clear of the sticky header. */
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-mint);
+  color: var(--color-forest-900);
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--color-forest);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+/* Scroll-reveal. Content is visible by default; the `js` class (set before paint
+ * in layout.tsx) opts in to the hidden start state, so no-JS visitors and
+ * crawlers always see everything. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero entrance: plays once on load, CSS only. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pop {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.enter-rise {
+  animation: rise 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+.enter-pop {
+  animation: pop 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--enter-delay, 0ms);
+}
+
+/* Subtle paper grain for large cream surfaces. */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.3 0 0 0 0 0.23 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint dotted grid used behind section headings. */
+.dot-grid {
+  background-image: radial-gradient(rgb(31 77 58 / 0.13) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+  .js [data-reveal] { opacity: 1; transform: none; }
+}
