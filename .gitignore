@@ -154,3 +154,6 @@ build/
 .wrangler/
 .vercel/
 .DS_Store
+.dev.vars
+.dev.vars.*
+.open-next/

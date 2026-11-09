@@ -33,22 +33,30 @@ npm run preview    # serve ./out locally
 
 ## Deploy to Cloudflare Pages
 
-1. Push this folder to its own Git repository (GitHub/GitLab).
-2. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** → pick the repo.
-3. Build settings:
-   - Framework preset: **None** (or Next.js (Static HTML Export))
+This is a **Pages** project serving plain static files. It is **not** a Worker:
+there is no `wrangler.jsonc`, no OpenNext adapter and no `wrangler deploy` step.
+
+> **Pitfall:** In the Cloudflare dashboard, *Workers & Pages → Create* defaults to
+> creating a **Worker**. If you import this repo there, Workers Builds detects
+> Next.js, installs `@opennextjs/cloudflare`, writes a `wrangler.jsonc` and runs
+> `npx wrangler deploy`, which fails on a static export
+> (`.next/standalone/.next/server/pages-manifest.json` not found). Always pick the
+> **Pages** tab ("Import an existing Git repository" under Pages).
+
+1. Cloudflare dashboard → **Workers & Pages → Create → Pages tab → Import an existing Git repository**
+   → select `Vikramsinghpanwar/Tiffny-Page`.
+2. Build settings:
+   - Production branch: `main`
+   - Framework preset: **Next.js (Static HTML Export)** (or **None**)
    - Build command: `npm run build`
    - Build output directory: `out`
-   - Root directory: `/` (or this folder, if it lives inside a monorepo)
-4. Environment variables (Production), all optional — see `.env.example`:
-   - `NODE_VERSION` = `20` (Next 16 needs Node ≥ 20.9)
-   - `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_CONTACT_EMAIL`
-5. **Save and Deploy.**
-6. **Custom domains → Set up a custom domain** → `www.tiffny.online` (or whichever host you
-   chose for `NEXT_PUBLIC_SITE_URL`). Keep the app on `tiffny.online`: the app's root URL
-   redirects signed-out visitors to `/login`, and the Android app is pinned to that host.
-
-Direct upload alternative (no Git): `npm run build && npx wrangler pages deploy out --project-name tiffny-landing`.
+   - Root directory: *(leave empty)*
+3. Environment variables (Production), all optional — see `.env.example`:
+   `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_CONTACT_EMAIL`.
+   Node.js 22 is picked up from `.node-version` (a `NODE_VERSION` variable also works).
+4. **Save and Deploy.** Every push to `main` redeploys automatically.
+5. **Custom domains → Set up a custom domain** → `www.tiffny.online`.
+   Leave `tiffny.online` (the app) and `api.tiffny.online` (the API) untouched.
 
 No SPA fallback or `_redirects` file is needed: every route is a real HTML file.
 Security and caching headers live in `public/_headers`.
